@@ -80,7 +80,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add event listeners to all income and expenses inputs
     const inputs = document.querySelectorAll('[id^="income-"], [id^="expenses-"]');
     inputs.forEach((input) => {
-        input.addEventListener("input", updateChart); // Update chart on input change
+        input.addEventListener("input", function () {
+            validateInput(input); // Validate the input
+            updateChart(); // Update chart on input change
+        });
     });
 
     // Add functionality to download the chart as an image
@@ -94,4 +97,43 @@ document.addEventListener("DOMContentLoaded", function () {
         link.download = "chart.png"; // Set the file name for the download
         link.click(); // Trigger the download
     });
+
+    // Username validation
+    const usernameInput = document.getElementById("username");
+    const usernameFeedback = document.getElementById("usernameFeedback");
+
+    usernameInput.addEventListener("input", function () {
+        const username = usernameInput.value;
+
+        // Validation criteria
+        const hasUpperCase = /[A-Z]/.test(username);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(username);
+        const hasNumber = /\d/.test(username);
+        const isValidLength = username.length >= 8;
+
+        if (hasUpperCase && hasSpecialChar && hasNumber && isValidLength) {
+            usernameInput.classList.remove("is-invalid");
+            usernameInput.classList.add("is-valid");
+            usernameFeedback.textContent = ""; // Clear feedback
+        } else {
+            usernameInput.classList.remove("is-valid");
+            usernameInput.classList.add("is-invalid");
+            usernameFeedback.textContent =
+                "Username must have at least 1 uppercase letter, 1 special character, 1 number, and be at least 8 characters long.";
+        }
+    });
+
+    // Function to validate income and expense inputs
+    function validateInput(input) {
+        const value = input.value.trim();
+        const isValidNumber = value === "" || !isNaN(value); // Allow empty input or valid number
+
+        if (isValidNumber) {
+            input.classList.remove("is-invalid");
+            input.classList.add("is-valid");
+        } else {
+            input.classList.remove("is-valid");
+            input.classList.add("is-invalid");
+        }
+    }
 });

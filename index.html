@@ -7,6 +7,16 @@
     <title>Bucks2Bar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Add styles for valid and invalid input borders */
+        .is-valid {
+            border-color: green !important;
+        }
+
+        .is-invalid {
+            border-color: red !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,6 +30,12 @@
         <p>Your go-to place for all things coffee!</p>
     </header>
     <main class="container mt-4">
+        <!-- Username input -->
+        <div class="mb-3">
+            <input type="text" class="form-control" id="username" placeholder="Enter your username">
+            <div id="usernameFeedback" class="form-text text-danger"></div>
+        </div>
+
         <h2>Welcome to Bucks2Bar</h2>
         <p>Explore our menu and enjoy your favorite drinks.</p>
         <!-- Additional content goes here -->
