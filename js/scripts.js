@@ -98,27 +98,31 @@ document.addEventListener("DOMContentLoaded", function () {
         link.click(); // Trigger the download
     });
 
-    // Username validation
+    // Username validation (uses validation helpers)
     const usernameInput = document.getElementById("username");
     const usernameFeedback = document.getElementById("usernameFeedback");
+
+    // Try to require the validation module if running in CommonJS (tests).
+    // Otherwise, expect a global validate object when running in browser.
+    let validators;
+    try {
+        validators = require("./validation");
+    } catch (e) {
+        // Browser environment: assume functions are loaded via a script tag
+        validators = window.validation;
+    }
 
     usernameInput.addEventListener("input", function () {
         const username = usernameInput.value;
 
-        // Validation criteria
-        const hasUpperCase = /[A-Z]/.test(username);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(username);
-        const hasNumber = /\d/.test(username);
-        const isValidLength = username.length >= 8;
-
-        if (hasUpperCase && hasSpecialChar && hasNumber && isValidLength) {
+        if (validators && validators.isValidUsername(username)) {
             usernameInput.classList.remove("is-invalid");
             usernameInput.classList.add("is-valid");
             usernameFeedback.textContent = ""; // Clear feedback
         } else {
             usernameInput.classList.remove("is-valid");
             usernameInput.classList.add("is-invalid");
-            usernameFeedback.textContent =
+            usernameFeedback.textContent = validators ? validators.getUsernameFeedback(username) :
                 "Username must have at least 1 uppercase letter, 1 special character, 1 number, and be at least 8 characters long.";
         }
     });
